@@ -97,7 +97,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""75a9a75f-b236-4a29-8d07-54c2c3472f77"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""NormalizeVector2"",
+                    ""processors"": ""NormalizeVector2,StickDeadzone(min=0.3)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 }
@@ -155,7 +155,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""id"": ""8090475b-29a0-4a5c-adeb-dce41a9f8e96"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(pressPoint=0.1)"",
                     ""initialStateCheck"": false
                 },
                 {

@@ -13,12 +13,19 @@ public class PlayerMove : MonoBehaviour
     Camera refCamera;
 
     float moveSpeed = 10.0f;
-    float applySpeed = 1.0f; // 回転速度
+    float applySpeed = 0.1f; // 回転速度
     Vector3 moveDirection;
     Rigidbody rb;
     Animator animator;
 
     bool isMove = true;
+
+    bool isAttackL = false;
+    bool isAttackH = false;
+    bool canNextAttack = true;
+
+    int comboStepL = 0;
+    int comboStepH = 0;
 
     void Awake()
     {
@@ -86,31 +93,92 @@ public class PlayerMove : MonoBehaviour
         else
         {
             animator.SetBool("Running", false);
-        }
-        
+        }        
     }
 
     void OnAttackStartEvent()
     {
+        Debug.Log("アニメーション開始");
+
         isMove = false;
+
         animator.SetBool("Running", false);
     }
 
     void OnAttackEndEvent()
     {
+        Debug.Log("アニメーション終了");
+
         isMove = true;
+
+        isAttackL = false;
+        isAttackH = false;
+
+        comboStepL = 0;
+        comboStepH = 0;
+    }
+
+    void OnNextAttackEvent()
+    {
+        canNextAttack = true;
     }
 
     void OnAttackLightPerfomed(InputAction.CallbackContext ctx)
     {
+        if (isAttackH) return;
+
+        if (comboStepL >= 1 && !canNextAttack) return;
+
         Debug.Log("軽攻撃");
-        animator.SetTrigger("Attack");
+
+        isAttackL = true;
+
+        if (comboStepL >= 3)
+        {
+            comboStepL = 1;
+        }
+        else
+        {
+            comboStepL++;
+        }
+
+        switch (comboStepL)
+        {
+            case 1: animator.SetTrigger("Attack_L1"); break;
+            case 2: animator.SetTrigger("Attack_L2"); break;
+            case 3: animator.SetTrigger("Attack_L3"); break;
+        }
+
+        canNextAttack = false;
     }
 
     void OnAttackHeavyPerfomed(InputAction.CallbackContext ctx)
     {
+        if (isAttackL) return;
+
+        if (comboStepH >= 1 && !canNextAttack) return;
+
         Debug.Log("重攻撃");
-        animator.SetTrigger("Attack");
+
+        isAttackH = true;
+
+        if (comboStepH >= 3)
+        {
+            comboStepH = 1;
+        }
+        else
+        {
+            comboStepH++;
+        }
+
+        switch (comboStepH)
+        {
+            case 1: animator.SetTrigger("Attack_H1"); break;
+            case 2: animator.SetTrigger("Attack_H2"); break;
+            case 3: animator.SetTrigger("Attack_H3"); break;
+        }
+
+        canNextAttack = false;
     }
 
     void OnDodgePerformed(InputAction.CallbackContext ctx)
